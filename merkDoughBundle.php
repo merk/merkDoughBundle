@@ -12,6 +12,7 @@
 namespace merk\DoughBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Dough\Money\BaseMoney;
 
 /**
  * merkDoughBundle
@@ -20,5 +21,10 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class merkDoughBundle extends Bundle
 {
+    public function boot()
+    {
+        parent::boot();
 
+        BaseMoney::setBank($this->container->get('merk_dough.bank'));
+    }
 }

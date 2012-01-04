@@ -7,10 +7,6 @@
 
         <service id="merk_dough.form.money_type" class="merk\DoughBundle\Form\Type\MoneyType">
             <tag name="form.type" alias="merk_dough_money" />
-            <argument type="service" id="merk_dough.form.money_transformer" />
-        </service>
-
-        <service id="merk_dough.form.money_transformer" class="merk\DoughBundle\Form\DataTransformer\MoneyTransformer">
             <argument type="service" id="merk_dough.bank" />
         </service>
 

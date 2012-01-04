@@ -4,15 +4,15 @@ namespace merk\DoughBundle\Form\DataTransformer;
 
 use Dough\Bank\BankInterface;
 use Dough\Money\MoneyInterface;
-use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\Extension\Core\DataTransformer\MoneyToLocalizedStringTransformer;
 
 /**
  * Transforms money textfields into Money instances.
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-class MoneyTransformer implements DataTransformerInterface
+class MoneyTransformer extends MoneyToLocalizedStringTransformer
 {
     /**
      * @var \Dough\Bank\BankInterface
@@ -24,9 +24,11 @@ class MoneyTransformer implements DataTransformerInterface
      *
      * @param \Dough\Bank\BankInterface $bank
      */
-    public function __construct(BankInterface $bank)
+    public function __construct(BankInterface $bank, $precision = null, $grouping = null, $roundingMode = null, $divisor = null)
     {
         $this->bank = $bank;
+
+        parent::__construct($precision, $grouping, $roundingMode, $divisor);
     }
 
     /**
@@ -46,7 +48,7 @@ class MoneyTransformer implements DataTransformerInterface
             throw new TransformationFailedException(sprintf('Unexpected value, expected MoneyInterface, got %s', is_object($val) ? get_class($val) : gettype($val)));
         }
 
-        return $val->reduce($this->bank)->getAmount();
+        return parent::transform($val->reduce($this->bank)->getAmount());
     }
 
     /**
@@ -57,6 +59,8 @@ class MoneyTransformer implements DataTransformerInterface
      */
     public function reverseTransform($val)
     {
+        $val = parent::reverseTransform($val);
+
         if (!$val) {
             return null;
         }

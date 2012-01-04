@@ -2,29 +2,34 @@
 
 namespace merk\DoughBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
+use Dough\Bank\BankInterface;
+use merk\DoughBundle\Form\DataTransformer\MoneyTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType as BaseMoneyType;
 use Symfony\Component\Form\FormBuilder;
 
-class MoneyType extends AbstractType
+class MoneyType extends BaseMoneyType
 {
-    protected $moneyTransformer;
+    protected $bank;
 
-    public function __construct(DataTransformerInterface $moneyTransformer)
+    public function __construct(BankInterface $bank)
     {
-        $this->moneyTransformer = $moneyTransformer;
+        $this->bank = $bank;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->appendClientTransformer($this->moneyTransformer);
+        $builder->appendClientTransformer(new MoneyTransformer(
+            $this->bank,
+            $options['precision'],
+            $options['grouping'],
+            null,
+            $options['divisor']
+        ));
+
+        $builder->setAttribute('currency', $options['currency']);
     }
 
-    public function getParent(array $options)
-    {
-        return 'text';
-    }
 
     public function getName()
     {
