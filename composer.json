@@ -1,0 +1,22 @@
+{
+    "name": "merk/dough-bundle",
+    "type": "symfony-bundle",
+    "description": "This Bundle integrates Dough into Symfony2",
+    "keywords": ["money", "dough", "currency", "currency conversion"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tim Nagel",
+            "email": "tim@nagel.com.au"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "2.*",
+        "merk/dough": "*"
+    },
+    "autoload": {
+        "psr-0": { "merk\\DoughBundle": "" }
+    },
+    "target-dir": "merk/DoughBundle"
+}
