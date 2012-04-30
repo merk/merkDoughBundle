@@ -61,7 +61,7 @@ class MoneyTransformer extends MoneyToLocalizedStringTransformer
     {
         $val = parent::reverseTransform($val);
 
-        if (!$val) {
+        if ($val === null) {
             return null;
         }
 
