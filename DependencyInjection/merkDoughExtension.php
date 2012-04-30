@@ -32,7 +32,7 @@ class merkDoughExtension extends Extension
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        foreach (array('bank', 'form') as $basename) {
+        foreach (array('bank', 'form', 'twig') as $basename) {
             $loader->load(sprintf('%s.xml', $basename));
         }
     }
