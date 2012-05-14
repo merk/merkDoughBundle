@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<srv:container xmlns="http://example.org/schema/dic/merk_dough"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:srv="http://symfony.com/schema/dic/services"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <config>
+        <bank default-currency="USD">
+            <currency>USD</currency>
+            <currency>EUR</currency>
+            <currency>RUR</currency>
+        </bank>
+        <exchanger>
+            <currency name="USD">
+                <rate name="EUR">0.774</rate>
+                <rate name="RUR">30.179</rate>
+            </currency>
+            <currency name="EUR">
+                <rate name="USD">1.292</rate>
+                <rate name="RUR">38.983</rate>
+            </currency>
+        </exchanger>
+    </config>
+</srv:container>
