@@ -1,0 +1,14 @@
+merk_dough:
+    bank:
+        default_currency: USD
+        currencies:       [USD, EUR, RUR]
+    exchanger:
+        currencies:
+            USD:
+                rates:
+                    EUR: 0.774
+                    RUR: 30.179
+            EUR:
+                rates:
+                    USD: 1.292
+                    RUR: 38.983
