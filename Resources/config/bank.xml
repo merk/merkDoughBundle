@@ -5,7 +5,15 @@
 
     <services>
 
-        <service id="merk_dough.bank" class="Dough\Bank\Bank" />
+        <service id="merk_dough.bank.default" class="Dough\Bank\Bank" public="false" />
+
+        <service id="merk_dough.bank.multi_currency" class="Dough\Bank\MultiCurrencyBank" public="false">
+            <argument /> <!-- Currencies -->
+            <argument /> <!-- Base currency -->
+            <argument type="service" id="merk_dough.exchanger" />
+        </service>
+
+        <service id="merk_dough.exchanger" class="Dough\Bank\ArrayExchanger" />
 
     </services>
 
