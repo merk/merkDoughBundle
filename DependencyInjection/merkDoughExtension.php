@@ -15,6 +15,7 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\FileLocator;
 
 /**
@@ -43,7 +44,7 @@ class merkDoughExtension extends Extension
             $container->getDefinition('merk_dough.bank.multi_currency')
                 ->replaceArgument(0, $mergedConfig['bank']['currencies'])
                 ->replaceArgument(1, $mergedConfig['bank']['default_currency'])
-                ->replaceArgument(2, $mergedConfig['bank']['exchanger']);
+                ->replaceArgument(2, new Reference($mergedConfig['bank']['exchanger']));
         } else {
             $container->setAlias('merk_dough.bank', 'merk_dough.bank.default');
         }

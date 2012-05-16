@@ -13,6 +13,7 @@ namespace merk\DoughBundle\Tests\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use merk\DoughBundle\DependencyInjection\merkDoughExtension;
 
 abstract class BaseExtensionTest extends \PHPUnit_Framework_TestCase
@@ -37,7 +38,7 @@ abstract class BaseExtensionTest extends \PHPUnit_Framework_TestCase
             array(
                 array('USD', 'EUR', 'RUR'),
                 'USD',
-                'merk_dough.exchanger'
+                new Reference('merk_dough.exchanger')
             ),
             $container->getDefinition('merk_dough.bank')->getArguments()
         );
