@@ -13,7 +13,7 @@
             <argument type="service" id="merk_dough.exchanger" />
         </service>
 
-        <service id="merk_dough.exchanger" class="Dough\Bank\ArrayExchanger" />
+        <service id="merk_dough.exchanger" class="Dough\Exchanger\ArrayExchanger" />
 
     </services>
 
