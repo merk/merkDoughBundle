@@ -1,10 +1,20 @@
 <?php
 
+/*
+ * This file is part of the merkDoughBundle package.
+ *
+ * (c) Tim Nagel <tim@nagel.com.au>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace merk\DoughBundle\Form\DataTransformer;
 
 use Dough\Bank\BankInterface;
 use Dough\Money\MoneyInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\MoneyToLocalizedStringTransformer;
 
 /**
@@ -15,15 +25,24 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\MoneyToLocalizedString
 class MoneyTransformer extends MoneyToLocalizedStringTransformer
 {
     /**
-     * @var \Dough\Bank\BankInterface
+     * @var BankInterface
      */
     private $bank;
+
+    /**
+     * @var string|null
+     */
     private $currency;
 
     /**
      * Constructor.
      *
-     * @param \Dough\Bank\BankInterface $bank
+     * @param BankInterface $bank         The bank
+     * @param string|null   $currency     The currency code
+     * @param int|null      $precision    Fraction digits
+     * @param string|null   $grouping     Grouping separator
+     * @param int|null      $roundingMode Rounding mode
+     * @param float|null    $divisor      The divisor
      */
     public function __construct(BankInterface $bank, $currency = null, $precision = null, $grouping = null, $roundingMode = null, $divisor = null)
     {
@@ -36,9 +55,12 @@ class MoneyTransformer extends MoneyToLocalizedStringTransformer
     /**
      * Transforms a Money object to its value.
      *
-     * @param mixed $val
-     * @return float
-     * @throws \Symfony\Component\Form\Exception\TransformationFailedException
+     * @param mixed $val A Money object or null
+     *
+     * @return string Localized money string
+     *
+     * @throws UnexpectedTypeException
+     * @throws TransformationFailedException
      */
     public function transform($val)
     {
@@ -46,18 +68,21 @@ class MoneyTransformer extends MoneyToLocalizedStringTransformer
             return '';
         }
 
-        if (!$val instanceof \Dough\Money\MoneyInterface) {
-            throw new TransformationFailedException(sprintf('Unexpected value, expected MoneyInterface, got %s', is_object($val) ? get_class($val) : gettype($val)));
+        if (!$val instanceof MoneyInterface) {
+            throw new UnexpectedTypeException($val, '\Dough\Money\MoneyInterface');
         }
 
         return parent::transform($this->bank->reduce($val, $this->currency)->getAmount());
     }
 
     /**
+     * Transforms a localized money string into a Money object.
      *
-     * @param mixed $val
+     * @param string $val Localized money string
+     *
      * @return MoneyInterface
-     * @throws \Symfony\Component\Form\Exception\TransformationFailedException
+     *
+     * @throws TransformationFailedException
      */
     public function reverseTransform($val)
     {
