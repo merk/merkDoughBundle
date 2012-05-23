@@ -21,6 +21,7 @@ class MoneyType extends BaseMoneyType
     {
         $builder->appendClientTransformer(new MoneyTransformer(
             $this->bank,
+            $options['currency'],
             $options['precision'],
             $options['grouping'],
             null,
@@ -33,6 +34,6 @@ class MoneyType extends BaseMoneyType
 
     public function getName()
     {
-        return 'dough_money';
+        return 'merk_dough_money';
     }
 }

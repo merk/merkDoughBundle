@@ -18,15 +18,17 @@ class MoneyTransformer extends MoneyToLocalizedStringTransformer
      * @var \Dough\Bank\BankInterface
      */
     private $bank;
+    private $currency;
 
     /**
      * Constructor.
      *
      * @param \Dough\Bank\BankInterface $bank
      */
-    public function __construct(BankInterface $bank, $precision = null, $grouping = null, $roundingMode = null, $divisor = null)
+    public function __construct(BankInterface $bank, $currency = null, $precision = null, $grouping = null, $roundingMode = null, $divisor = null)
     {
         $this->bank = $bank;
+        $this->currency = $currency;
 
         parent::__construct($precision, $grouping, $roundingMode, $divisor);
     }
@@ -48,7 +50,7 @@ class MoneyTransformer extends MoneyToLocalizedStringTransformer
             throw new TransformationFailedException(sprintf('Unexpected value, expected MoneyInterface, got %s', is_object($val) ? get_class($val) : gettype($val)));
         }
 
-        return parent::transform($val->reduce($this->bank)->getAmount());
+        return parent::transform($this->bank->reduce($val, $this->currency)->getAmount());
     }
 
     /**
@@ -65,6 +67,6 @@ class MoneyTransformer extends MoneyToLocalizedStringTransformer
             return null;
         }
 
-        return $this->bank->createMoney($val);
+        return $this->bank->createMoney($val, $this->currency);
     }
 }
