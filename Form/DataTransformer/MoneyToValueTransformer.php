@@ -13,16 +13,15 @@ namespace merk\DoughBundle\Form\DataTransformer;
 
 use Dough\Bank\BankInterface;
 use Dough\Money\MoneyInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
-use Symfony\Component\Form\Extension\Core\DataTransformer\MoneyToLocalizedStringTransformer;
 
 /**
- * Transforms money textfields into Money instances.
+ * Transforms between an Money instance and a raw value.
  *
  * @author Tim Nagel <tim@nagel.com.au>
  */
-class MoneyTransformer extends MoneyToLocalizedStringTransformer
+class MoneyToValueTransformer implements DataTransformerInterface
 {
     /**
      * @var BankInterface
@@ -37,19 +36,13 @@ class MoneyTransformer extends MoneyToLocalizedStringTransformer
     /**
      * Constructor.
      *
-     * @param BankInterface $bank         The bank
-     * @param string|null   $currency     The currency code
-     * @param int|null      $precision    Fraction digits
-     * @param string|null   $grouping     Grouping separator
-     * @param int|null      $roundingMode Rounding mode
-     * @param float|null    $divisor      The divisor
+     * @param BankInterface $bank     The bank
+     * @param string|null   $currency The currency code
      */
-    public function __construct(BankInterface $bank, $currency = null, $precision = null, $grouping = null, $roundingMode = null, $divisor = null)
+    public function __construct(BankInterface $bank, $currency = null)
     {
         $this->bank = $bank;
         $this->currency = $currency;
-
-        parent::__construct($precision, $grouping, $roundingMode, $divisor);
     }
 
     /**
@@ -57,39 +50,40 @@ class MoneyTransformer extends MoneyToLocalizedStringTransformer
      *
      * @param mixed $val A Money object or null
      *
-     * @return string Localized money string
+     * @return float A scalar value
      *
      * @throws UnexpectedTypeException
-     * @throws TransformationFailedException
      */
     public function transform($val)
     {
         if (null === $val) {
-            return '';
+            return null;
         }
 
         if (!$val instanceof MoneyInterface) {
             throw new UnexpectedTypeException($val, '\Dough\Money\MoneyInterface');
         }
 
-        return parent::transform($this->bank->reduce($val, $this->currency)->getAmount());
+        return $this->bank->reduce($val, $this->currency)->getAmount();
     }
 
     /**
-     * Transforms a localized money string into a Money object.
+     * Transforms a scalar value to a Money object.
      *
-     * @param string $val Localized money string
+     * @param mixed $val The value in the transformed representation
      *
      * @return MoneyInterface
      *
-     * @throws TransformationFailedException
+     * @throws UnexpectedTypeException
      */
     public function reverseTransform($val)
     {
-        $val = parent::reverseTransform($val);
-
         if ($val === null) {
             return null;
+        }
+
+        if (null !== $val && !(is_int($val) || is_float($val))) {
+            throw new UnexpectedTypeException($val, 'integer or float');
         }
 
         return $this->bank->createMoney($val, $this->currency);
