@@ -34,7 +34,7 @@ class merkDoughExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $mergedConfig = $this->processConfiguration(new Configuration(), $configs);
 
-        foreach (array('bank', 'form', 'twig') as $basename) {
+        foreach (array('bank', 'form', 'twig', 'validator') as $basename) {
             $loader->load(sprintf('%s.xml', $basename));
         }
 

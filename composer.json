@@ -17,7 +17,8 @@
         "merk/dough": "*"
     },
     "require-dev": {
-        "symfony/yaml": "2.*"
+        "symfony/yaml": "2.*",
+        "symfony/validator": "2.*"
     },
     "autoload": {
         "psr-0": { "merk\\DoughBundle": "" }
