@@ -71,4 +71,21 @@ class MoneyValidator extends ConstraintValidator
             $walker->walkConstraint($constr, $value->getAmount(), $group, $propertyPath);
         }
     }
+
+    /**
+     * Checks if the passed value is valid.
+     *
+     * @param mixed      $value      The value that should be validated
+     * @param Constraint $constraint The constraint for the validation
+     *
+     * @return Boolean Whether or not the value is valid
+     *
+     * @api
+     */
+    public function isValid($value, Constraint $constraint)
+    {
+        $this->validate($value, $constraint);
+
+        return true;
+    }
 }
