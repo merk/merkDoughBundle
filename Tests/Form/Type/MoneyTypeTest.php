@@ -41,16 +41,13 @@ class MoneyTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testBind()
     {
-        $money = new Money(1.33);
+        $amount = 1.33;
+        $money = new Money($amount);
 
         $this->bank->expects($this->once())
             ->method('createMoney')
-            ->with($this->equalTo(1.33), $this->equalTo('DEM'))
+            ->with($this->equalTo($amount), $this->equalTo('DEM'))
             ->will($this->returnValue($money));
-        $this->bank->expects($this->once())
-            ->method('reduce')
-            ->with($this->equalTo($money), $this->equalTo('DEM'))
-            ->will($this->returnArgument(0));
 
         $form = $this->factory->create('merk_dough_money', null, array(
             'currency' => 'DEM'
@@ -60,13 +57,13 @@ class MoneyTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($form->isSynchronized());
         $this->assertSame($money, $form->getData());
-        $this->assertEquals('1.33', $form->getClientData());
+        $this->assertEquals($amount, $form->getNormData());
+        $this->assertEquals('1.33', $form->getViewData());
     }
 
     public function testBindNull()
     {
         $this->bank->expects($this->never())->method('createMoney');
-        $this->bank->expects($this->never())->method('reduce');
 
         $form = $this->factory->create('merk_dough_money', null);
 
@@ -74,7 +71,40 @@ class MoneyTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($form->isSynchronized());
         $this->assertNull($form->getData());
-        $this->assertEmpty($form->getClientData());
+        $this->assertNull($form->getNormData());
+        $this->assertEmpty($form->getViewData());
+    }
+
+    public function testSetData()
+    {
+        $money = new Money(7.99);
+        $currency = 'DEM';
+
+        $this->bank->expects($this->once())
+            ->method('reduce')
+            ->with($this->equalTo($money), $this->equalTo($currency))
+            ->will($this->returnArgument(0));
+
+        $form = $this->factory->create('merk_dough_money', null, array(
+            'currency' => $currency
+        ));
+
+        $form->setData($money);
+
+        $this->assertSame($money, $form->getData());
+        $this->assertEquals(7.99, $form->getNormData());
+        $this->assertEquals('7.99', $form->getViewData());
+    }
+
+    public function testSetDataNull()
+    {
+        $this->bank->expects($this->never())->method('reduce');
+
+        $form = $this->factory->create('merk_dough_money');
+
+        $this->assertNull($form->getData());
+        $this->assertNull($form->getNormData());
+        $this->assertEmpty($form->getViewData());
     }
 
     protected function setUp()
@@ -89,7 +119,7 @@ class MoneyTypeTest extends \PHPUnit_Framework_TestCase
         $this->bank = $this->getMock('Dough\Bank\BankInterface');
 
         $this->factory = new FormFactory(array(new CoreExtension()));
-        $this->builder = new FormBuilder(null, $this->factory, $this->dispatcher);
+        $this->builder = new FormBuilder(null, null, $this->dispatcher, $this->factory);
 
         $this->factory->addType(new MoneyType($this->bank));
     }

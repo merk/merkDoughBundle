@@ -12,10 +12,9 @@
 namespace merk\DoughBundle\Form\Type;
 
 use Dough\Bank\BankInterface;
-use merk\DoughBundle\Form\DataTransformer\MoneyTransformer;
-use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType as BaseMoneyType;
-use Symfony\Component\Form\FormBuilder;
+use merk\DoughBundle\Form\DataTransformer\MoneyToValueTransformer;
 
 class MoneyType extends BaseMoneyType
 {
@@ -34,18 +33,13 @@ class MoneyType extends BaseMoneyType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->appendClientTransformer(new MoneyTransformer(
-            $this->bank,
-            $options['currency'],
-            $options['precision'],
-            $options['grouping'],
-            null,
-            $options['divisor']
-        ));
+        parent::buildForm($builder, $options);
 
-        $builder->setAttribute('currency', $options['currency']);
+        $builder
+            ->addModelTransformer(new MoneyToValueTransformer($this->bank, $options['currency']))
+            ->setAttribute('currency', $options['currency']);
     }
 
     /**
