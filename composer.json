@@ -17,7 +17,7 @@
         "merk/dough": "1.*"
     },
     "require-dev": {
-        "symfony/validator": "2.1.*"
+        "symfony/validator": "2.1.*",
         "symfony/yaml": "2.1.*"
     },
     "autoload": {
