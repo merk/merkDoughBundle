@@ -11,8 +11,9 @@
 
 namespace merk\DoughBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Doctrine\ODM\MongoDB\Mapping\Types\Type;
 use Dough\Money\BaseMoney;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * merkDoughBundle
@@ -26,5 +27,7 @@ class merkDoughBundle extends Bundle
         parent::boot();
 
         BaseMoney::setBank($this->container->get('merk_dough.bank'));
+        Type::addType('dough_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyType');
+        Type::addType('dough_currency_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughCurrencyMoneyType');
     }
 }
