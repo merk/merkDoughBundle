@@ -22,12 +22,16 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class merkDoughBundle extends Bundle
 {
+    public function __construct()
+    {
+        Type::registerType('dough_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyType');
+        Type::registerType('dough_currency_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughCurrencyMoneyType');
+    }
+
     public function boot()
     {
         parent::boot();
 
         BaseMoney::setBank($this->container->get('merk_dough.bank'));
-        Type::addType('dough_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyType');
-        Type::addType('dough_currency_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughCurrencyMoneyType');
     }
 }
