@@ -11,8 +11,9 @@
 
 namespace merk\DoughBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Doctrine\ODM\MongoDB\Mapping\Types\Type;
 use Dough\Money\BaseMoney;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * merkDoughBundle
@@ -21,6 +22,14 @@ use Dough\Money\BaseMoney;
  */
 class merkDoughBundle extends Bundle
 {
+    public function __construct()
+    {
+        Type::registerType('dough_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyType');
+        Type::registerType('dough_currency_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughCurrencyMoneyType');
+        Type::registerType('dough_money_hash', 'Vespolina\Pricing\Doctrine\ODM\MongoDB\Type\DoughMoneyHashType');
+        Type::registerType('dough_currency_money_hash', 'Vespolina\Pricing\Doctrine\ODM\MongoDB\Type\DoughCurrencyMoneyHashType');
+    }
+
     public function boot()
     {
         parent::boot();
