@@ -11,7 +11,7 @@
 
 namespace merk\DoughBundle;
 
-use Doctrine\ODM\MongoDB\Mapping\Types\Type;
+use Doctrine\ODM\MongoDB\Types\Type;
 use Dough\Money\BaseMoney;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -24,7 +24,7 @@ class merkDoughBundle extends Bundle
 {
     public function __construct()
     {
-        if (class_exists('Doctrine\\ODM\\MongoDB\\Mapping\\Types\\Type')) {
+        if (class_exists('Doctrine\\ODM\\MongoDB\\Types\\Type')) {
             Type::registerType('dough_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyType');
             Type::registerType('dough_currency_money', 'Dough\Doctrine\ODM\MongoDB\Type\DoughCurrencyMoneyType');
             Type::registerType('dough_money_hash', 'Dough\Doctrine\ODM\MongoDB\Type\DoughMoneyHashType');
