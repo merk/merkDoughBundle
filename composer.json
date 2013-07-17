@@ -12,13 +12,13 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": ">=2.1,<2.3-dev",
-        "symfony/form": ">=2.1,<2.3-dev",
+        "symfony/framework-bundle": "~2.1",
+        "symfony/form": "~2.1",
         "merk/dough": "1.*"
     },
     "require-dev": {
-        "symfony/validator": ">=2.1,<2.3-dev",
-        "symfony/yaml": ">=2.1,<2.3-dev"
+        "symfony/validator": "~2.1",
+        "symfony/yaml": "~2.1"
     },
     "autoload": {
         "psr-0": { "merk\\DoughBundle": "" }
